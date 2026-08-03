@@ -16,13 +16,15 @@ import sqlite3
 import sys
 
 from PySide6.QtCore import QRectF
-from PySide6.QtGui import QPainter, QPixmap
+from PySide6.QtGui import QPainter, QPixmap, QBrush, QColor
 from PySide6.QtWidgets import (
     QApplication,
     QGraphicsPixmapItem,
     QGraphicsScene,
     QGraphicsView,
     QMainWindow,
+    QGraphicsEllipseItem,
+    QGraphicsItem
 )
 
 MBTILES_PATH = "tucson_debug.mbtiles"
@@ -235,7 +237,16 @@ class MainWindow(QMainWindow):
         self.view.centerOn(wx, wy)
         self.view.refresh_tiles()
 
+        #TEST CODE REMOVE IN PROD
+        eclipse = QGraphicsEllipseItem(-6, -6, 12, 12)
+        eclipse.setPos(wx, wy)
+        eclipse.setBrush(QBrush(QColor("#c0392b")))
+        eclipse.setZValue(1)                              
+        eclipse.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        scene.addItem(eclipse)
+
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
+
 
     def closeEvent(self, event):
         self.source.close()
