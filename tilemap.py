@@ -14,8 +14,9 @@ Run:  python tilemap.py
 import numpy as np
 import sqlite3
 import sys
+from pathlib import Path
 
-from PySide6.QtCore import QRectF
+from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QPainter, QPixmap, QBrush, QColor
 from PySide6.QtWidgets import (
     QApplication,
@@ -27,7 +28,8 @@ from PySide6.QtWidgets import (
     QGraphicsItem
 )
 
-MBTILES_PATH = "tucson_debug.mbtiles"
+MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
+
 TILE = 256
 ZOOM = 16
 
@@ -206,9 +208,27 @@ class TileMapView(QGraphicsView):
                 f"want {n} tiles, have {len(self._tiles)} in scene"
             )
 
-
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.RightButton:
+            scene_pos = self.mapToScene(event.pos())
+            f = flag(int(scene_pos.x()), int(scene_pos.y()))
+            self.scene().addItem(f)
+        super().mousePressEvent(event)
 # ---------------------------------------------------------------------------
+# flag class for constant item on screen
+class flag(QGraphicsEllipseItem):
 
+    def __init__(self, wx, wy):
+        super().__init__(-6, -6, 12, 12)
+        self.setPos(wx, wy)
+        self.setBrush(QBrush(QColor("#c0392b")))
+        self.setZValue(1)                              
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
+        
+
+    def setLatlon(self, wx, wy): 
+        self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -238,11 +258,7 @@ class MainWindow(QMainWindow):
         self.view.refresh_tiles()
 
         #TEST CODE REMOVE IN PROD
-        eclipse = QGraphicsEllipseItem(-6, -6, 12, 12)
-        eclipse.setPos(wx, wy)
-        eclipse.setBrush(QBrush(QColor("#c0392b")))
-        eclipse.setZValue(1)                              
-        eclipse.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        eclipse = flag(wx, wy)
         scene.addItem(eclipse)
 
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
