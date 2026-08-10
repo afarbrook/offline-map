@@ -16,7 +16,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QRectF, Qt
+from PySide6.QtCore import QRectF, Qt, QPointF
 from PySide6.QtGui import QPainter, QPixmap, QBrush, QColor
 from PySide6.QtWidgets import (
     QApplication,
@@ -120,11 +120,10 @@ class TileMapView(QGraphicsView):
         # synchronously, which calls refresh_tiles(), which reads both.
         self.source = source
         self._tiles = {}  # (z, x, y) -> QGraphicsPixmapItem currently in scene
-
         self._scene = scene  # keep a reference or it gets garbage collected
         self.setScene(self._scene)
-
-        self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
+        self._panStart = None
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
         self.setResizeAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -198,7 +197,18 @@ class TileMapView(QGraphicsView):
                 f"tile {int(pt.x() // TILE)}/{int(pt.y() // TILE)}     "
                 f"loaded: {len(self._tiles)}"
             )
+        if self._panStart:
+            deltaPos = event.position() - self._panStart
+            self.horizontalScrollBar().setValue(self.horizontalScrollBar().value() - deltaPos.x())
+            self.verticalScrollBar().setValue(self.verticalScrollBar().value() - deltaPos.y())
+            self._panStart = event.position()
+
         super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self._panStart = None
+        self.unsetCursor()
+        return super().mouseReleaseEvent(event)
 
     def _update_status(self):
         win = self.window()
@@ -209,10 +219,16 @@ class TileMapView(QGraphicsView):
             )
 
     def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.MiddleButton:
+            self._panStart = event.position().toPoint()
+            self.setCursor(Qt.CursorShape.ClosedHandCursor)
+            event.accept()
+            return
         if event.button() == Qt.MouseButton.RightButton:
-            scene_pos = self.mapToScene(event.pos())
+            scene_pos = self.mapToScene(event.position().toPoint())
             f = flag(int(scene_pos.x()), int(scene_pos.y()))
             self.scene().addItem(f)
+            return
         super().mousePressEvent(event)
 # ---------------------------------------------------------------------------
 # flag class for constant item on screen
@@ -223,12 +239,33 @@ class flag(QGraphicsEllipseItem):
         self.setPos(wx, wy)
         self.setBrush(QBrush(QColor("#c0392b")))
         self.setZValue(1)                              
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        self.setFlags(
+            QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations
+            | QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(
+            QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges, True
+        )
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
         
 
     def setLatlon(self, wx, wy): 
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
+
+    def itemChange(self, change, value):
+        if (
+            change == QGraphicsItem.GraphicsItemChange.ItemPositionChange
+            and self.scene()
+        ):
+            new_pos = value
+            grid_size = 30 
+
+            
+            x = new_pos.x()
+            y = new_pos.y()
+
+            return QPointF(x, y)  # Return the snapped coordinates
+
+        return super().itemChange(change, value)
 
 class MainWindow(QMainWindow):
     def __init__(self):
