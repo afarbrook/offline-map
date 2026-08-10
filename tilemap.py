@@ -227,9 +227,17 @@ class TileMapView(QGraphicsView):
         if event.button() == Qt.MouseButton.RightButton:
             scene_pos = self.mapToScene(event.position().toPoint())
             f = flag(int(scene_pos.x()), int(scene_pos.y()))
-            self.scene().addItem(f)
+            self._scene.addItem(f)
             return
         super().mousePressEvent(event)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Backspace:
+            selected = self._scene.selectedItems()
+            for pin in selected:
+                self._scene.removeItem(pin)
+
+        return super().keyPressEvent(event)
 # ---------------------------------------------------------------------------
 # flag class for constant item on screen
 class flag(QGraphicsEllipseItem):
@@ -244,6 +252,9 @@ class flag(QGraphicsEllipseItem):
             | QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges, True
+        )
+        self.setFlag(
+            QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True
         )
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
         
