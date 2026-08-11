@@ -91,9 +91,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.btn_draw)
         layout.addWidget(self.btn_clear)
 
-        content_widget = QWidget()
-        content_widget.setLayout(layout)
-        self.dock.setWidget(content_widget)
+
+        self.dock.setWidget(self.toolbar)
 
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
 
