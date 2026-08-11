@@ -35,7 +35,7 @@ TILE = 256
 
 
 
-from mappingFunctions import world_to_latlon, latlon_to_world
+from mapping_functions import world_to_latlon, latlon_to_world
 # ============================================================================
 # test machinery
 # ============================================================================
