@@ -25,7 +25,8 @@ from PySide6.QtWidgets import (
     QPushButton, 
     QGraphicsRectItem, 
     QWidget, 
-    QVBoxLayout
+    QVBoxLayout,
+    QDockWidget
 )
 
 import tile_source
@@ -49,7 +50,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Tucson tile map")
-        self.resize(1000, 700)
+        self.resize(1280, 720)
 
         self.source = tile_source.TileSource(MBTILES_PATH)
 
@@ -72,11 +73,29 @@ class MainWindow(QMainWindow):
         self.view.centerOn(wx, wy)
         self.view.refresh_tiles()
 
-        #TEST CODE REMOVE IN PROD
-        eclipse = flag.flag(wx, wy)
-        scene.addItem(eclipse)
-
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
+
+        self.dock = QDockWidget("Test", self)
+
+        self.toolbar = QWidget(self)
+        
+        # 2. Set up a vertical layout inside the container
+        layout = QVBoxLayout(self.toolbar)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(10)
+        self.btn_select = QPushButton("Select Mode")
+        self.btn_draw = QPushButton("Draw Mode")
+        self.btn_clear = QPushButton("Clear All")
+        
+        layout.addWidget(self.btn_select)
+        layout.addWidget(self.btn_draw)
+        layout.addWidget(self.btn_clear)
+
+        content_widget = QWidget()
+        content_widget.setLayout(layout)
+        self.dock.setWidget(content_widget)
+
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
 
 
     def closeEvent(self, event):

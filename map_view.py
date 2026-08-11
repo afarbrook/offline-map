@@ -37,7 +37,6 @@ class TileMapView(QGraphicsView):
         self._tiles = {}  # (z, x, y) -> QGraphicsPixmapItem currently in scene
         self._scene = scene  # keep a reference or it gets garbage collected
         self._panStart = None
-        self.toolbar = QWidget(self) # toolbar to hold buttons 
 
         self.setScene(self._scene)
         self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
@@ -46,9 +45,8 @@ class TileMapView(QGraphicsView):
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.viewport().setMouseTracking(True)
 
-        layout = QVBoxLayout(self.toolbar)
-        layout.setContentsMargins(5, 5, 5, 5)
-        layout.setSpacing(10)
+
+
 
     # -- TODO 1 -------------------------------------------------------------
 
