@@ -144,9 +144,7 @@ class TileMapView(QGraphicsView):
             event.accept()
             return
         if event.button() == Qt.MouseButton.RightButton:
-            scene_pos = self.mapToScene(event.position().toPoint())
-            f = flag.flag(int(scene_pos.x()), int(scene_pos.y()))
-            self._scene.addItem(f)
+            self.map_clicked()
             return
         super().mousePressEvent(event)
 
@@ -157,4 +155,8 @@ class TileMapView(QGraphicsView):
                 self._scene.removeItem(pin)
 
         return super().keyPressEvent(event)
+
+    def map_clicked():
+        
+        pass
 # ---------------------------------------------------------------------------
