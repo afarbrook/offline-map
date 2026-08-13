@@ -10,9 +10,9 @@ import map_view
 import flag
 
 
-@dataclass
+@dataclass 
 class Placement:
-    id: int
+    id: int  
     lat: float
     lon: float
     unit_id: str
@@ -64,7 +64,7 @@ class PlacementModel(QAbstractListModel):
         marker = self._placement[index.row()]
 
         if role == Qt.ItemDataRole.DisplayRole:
-            return f"{marker['id']}  x{marker['unit_type']}"
+            return f"{marker.id}  x{marker.unit_type}"
  
         if role == Qt.ItemDataRole.DecorationRole:
             pass

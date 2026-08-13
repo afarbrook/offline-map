@@ -2,7 +2,7 @@
 import numpy as np
 
 def world_to_latlon(x, y, z):
-    px, py = int(x / 256), int(y / 256)
+    px, py = x / 256, y / 256
     n = 2**z
     lon = (px/n) * 360 - 180
     lat = np.degrees( np.arctan( np.sinh(np.pi-(py/n)*(2*np.pi)) ) )

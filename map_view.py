@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import (
     QGraphicsPixmapItem,
@@ -27,10 +27,11 @@ class TileMapView(QGraphicsView):
     # Load one extra ring of tiles beyond the viewport so they don't pop in
     # at the edge while panning.
     PAD = 1
-
+    map_clicked = Signal(float, float)
+    
     def __init__(self, scene, source, parent=None):
         super().__init__(parent)
-
+       
         # These must exist BEFORE setScene(): setScene fires scrollContentsBy
         # synchronously, which calls refresh_tiles(), which reads both.
         self.source = source
@@ -144,7 +145,9 @@ class TileMapView(QGraphicsView):
             event.accept()
             return
         if event.button() == Qt.MouseButton.RightButton:
-            self.map_clicked()
+            pt = self.mapToScene(event.position().toPoint())
+            lat, lon = world_to_latlon(pt.x(), pt.y(), ZOOM)
+            self.map_clicked.emit(lat, lon)
             return
         super().mousePressEvent(event)
 
@@ -156,7 +159,4 @@ class TileMapView(QGraphicsView):
 
         return super().keyPressEvent(event)
 
-    def map_clicked():
-        
-        pass
 # ---------------------------------------------------------------------------

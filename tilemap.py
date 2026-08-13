@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
 
 import tile_source
 import mapping_functions
+import flag
 import map_view
 from model import PlacementModel
 
@@ -51,9 +52,9 @@ class MainWindow(QMainWindow):
         self.source = tile_source.TileSource(MBTILES_PATH)
         self.model = PlacementModel()
 
-        scene = QGraphicsScene()
+        self.scene = QGraphicsScene()
         x0, y0, x1, y1 = BBOX_TILES
-        scene.setSceneRect(
+        self.scene.setSceneRect(
             QRectF(
                 x0 * TILE,
                 y0 * TILE,
@@ -62,7 +63,7 @@ class MainWindow(QMainWindow):
             )
         )
 
-        self.view = map_view.TileMapView(scene, self.source, self)
+        self.view = map_view.TileMapView(self.scene, self.source, self)
         self.setCentralWidget(self.view)
 
         # Start centred on somewhere real rather than the corner of the bbox.
@@ -92,17 +93,25 @@ class MainWindow(QMainWindow):
     def on_rows_inserted(self, parent, first, last):
         for row in range(first, last + 1):
             placed = self.model.at(row)
-            self._pins[placed.id] = placed
+            x, y = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
+            f = flag.flag(x, y)
+            self.scene.addItem(f)
+            self._pins[placed.id] = f # add to our own record
 
     def on_rows_removed(self, parent, first, last):
-        pass
+        for row in range(first, last + 1):
+            placed = self.model.at(row)
+            f = self._pins[placed.id]
+            self.scene.removeItem(f)
+            self._pins[placed.id] = None
 
     def on_data_changed(self, topLeft, bottomRight, roles=None):
         pass
 
     def on_map_clicked(self, lat, lon):
-        
-        pass
+        unit_type = self.panel.current_unit_type()
+        if unit_type is not None:
+            self.model.add(lat, lon , 5, unit_type, 5, 5)
 
 
 class PlacementPanel(QWidget):
@@ -125,6 +134,9 @@ class PlacementPanel(QWidget):
         self.btn_select = QPushButton("Select Mode")
         self.btn_draw = QPushButton("Draw Mode")
         self.btn_clear = QPushButton("Clear All")
+        self.btn_test = QPushButton("Test")
+        self.btn_test.setCheckable(True)
+        self.btn_test.setProperty("unit_type", "engine")
 
 
         self.btn_clear.clicked.connect(self.clear_requested.emit)
@@ -132,8 +144,12 @@ class PlacementPanel(QWidget):
         layout.addWidget(self.btn_draw)
         layout.addWidget(self.btn_clear)
         layout.addWidget(self.unit_list)
+        layout.addWidget(self.btn_test)
 
         layout.addStretch()
+
+    def current_unit_type(self):
+        return self.btn_test.property("unit_type")
 
         
 
