@@ -78,9 +78,10 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
 
         self.model.rowsInserted.connect(self.on_rows_inserted)
-        self.model.rowsRemoved.connect(self.on_rows_removed)
+        self.model.rowsAboutToBeRemoved.connect(self.on_rows_removed)
         self.model.dataChanged.connect(self.on_data_changed)
         self.view.map_clicked.connect(self.on_map_clicked)
+        self.view.pin_deleted.connect(self.on_flag_deleted)
 
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
 
@@ -95,6 +96,7 @@ class MainWindow(QMainWindow):
             placed = self.model.at(row)
             x, y = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
             f = flag.flag(x, y)
+            f.setData(0, placed.id)
             self.scene.addItem(f)
             self._pins[placed.id] = f # add to our own record
 
@@ -112,6 +114,12 @@ class MainWindow(QMainWindow):
         unit_type = self.panel.current_unit_type()
         if unit_type is not None:
             self.model.add(lat, lon , 5, unit_type, 5, 5)
+
+    def on_flag_deleted(self, id):
+        row = self.model.row_of_id(id)
+        if row:
+            self.model.remove(row)
+
 
 
 class PlacementPanel(QWidget):

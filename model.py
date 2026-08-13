@@ -83,6 +83,13 @@ class PlacementModel(QAbstractListModel):
               return self._placement[row]
          return None
 
+    def row_of_id(self, ID):
+        for place in range(len(self._placement)):
+            if self._placement[place].id == ID:
+                return place
+        return None
+         
+
         
 
 

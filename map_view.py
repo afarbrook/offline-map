@@ -28,6 +28,7 @@ class TileMapView(QGraphicsView):
     # at the edge while panning.
     PAD = 1
     map_clicked = Signal(float, float)
+    pin_deleted = Signal(int)
     
     def __init__(self, scene, source, parent=None):
         super().__init__(parent)
@@ -155,7 +156,8 @@ class TileMapView(QGraphicsView):
         if event.key() == Qt.Key.Key_Backspace:
             selected = self._scene.selectedItems()
             for pin in selected:
-                self._scene.removeItem(pin)
+                pin_id = pin.data(0)
+                self.pin_deleted.emit(pin_id)
 
         return super().keyPressEvent(event)
 
