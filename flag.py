@@ -13,10 +13,15 @@ ZOOM = 16
 # flag class for constant item on screen
 class flag(QGraphicsEllipseItem):
 
-    def __init__(self, wx, wy):
+    colors = {"engine": QBrush(QColor("#c0392b")), "ambulance": QBrush(QColor("#3a589d")),
+               "ladder": QBrush(QColor("#cc8813")), "SUV/K9": QBrush(QColor("#13ccaa")), 
+               "cruiser": QBrush(QColor("#1dd62d")) 
+            }
+
+    def __init__(self, wx, wy, type="engine"):
         super().__init__(-6, -6, 12, 12)
         self.setPos(wx, wy)
-        self.setBrush(QBrush(QColor("#c0392b")))
+        self.setBrush(self.colors[type])
         self.setZValue(1)                              
         self.setFlags(
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations
@@ -28,7 +33,8 @@ class flag(QGraphicsEllipseItem):
             QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True
         )
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
-        
+
+   
 
     def setLatlon(self, wx, wy): 
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)

@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
         for row in range(first, last + 1):
             placed = self.model.at(row)
             x, y = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
-            f = flag.flag(x, y)
+            f = flag.flag(x, y, self.panel.current_unit_type())
             f.setData(0, placed.id)
             self.scene.addItem(f)
             self._pins[placed.id] = f # add to our own record
@@ -166,7 +166,7 @@ class PlacementPanel(QWidget):
 
         self.btn_ladder = QPushButton("Ladder Truck")
         self.btn_ladder.setCheckable(True)
-        self.btn_ladder.setProperty("unit_type", "Ladder")
+        self.btn_ladder.setProperty("unit_type", "ladder")
 
 
 
@@ -188,9 +188,12 @@ class PlacementPanel(QWidget):
 
         layout.addStretch()
 
+        #self.unit_list.selectionModel().selectionChanged.connect(self.on_list_selection)
+
     def current_unit_type(self):
         btn = self.unit_group.checkedButton()
         return btn.property("unit_type") if btn else None
+
 
         
 
