@@ -40,14 +40,14 @@ class PlacementModel(QAbstractListModel):
         return placed
 
     def remove(self, row):
-        if not 0 < row < len(self._placement):
+        if not 0 <= row < len(self._placement):
             return
         self.beginRemoveRows(QModelIndex(), row, row)
         del self._placement[row]
         self.endRemoveRows()
 
     def move(self, row, lat, lon):
-        if not 0 < row < len(self._placement):
+        if not 0 <= row < len(self._placement):
                     return
         self._placement[row].lat = lat
         self._placement[row].lon = lon
@@ -64,7 +64,7 @@ class PlacementModel(QAbstractListModel):
         marker = self._placement[index.row()]
 
         if role == Qt.ItemDataRole.DisplayRole:
-            return f"{marker.id}  x{marker.unit_type}"
+            return f"{marker.id}  {marker.unit_type}"
  
         if role == Qt.ItemDataRole.DecorationRole:
             pass
@@ -79,7 +79,7 @@ class PlacementModel(QAbstractListModel):
         return None
 
     def at(self, row):
-         if  0 < row < len(self._placement):
+         if  0 <= row < len(self._placement):
               return self._placement[row]
          return None
 

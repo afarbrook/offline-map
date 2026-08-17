@@ -22,7 +22,8 @@ from PySide6.QtWidgets import (
     QWidget, 
     QVBoxLayout,
     QDockWidget,
-    QListView
+    QListView,
+    QButtonGroup
 )
 
 import tile_source
@@ -117,7 +118,7 @@ class MainWindow(QMainWindow):
 
     def on_flag_deleted(self, id):
         row = self.model.row_of_id(id)
-        if row:
+        if row is not None:
             self.model.remove(row)
 
 
@@ -139,25 +140,57 @@ class PlacementPanel(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(10)
+
+        '''
         self.btn_select = QPushButton("Select Mode")
         self.btn_draw = QPushButton("Draw Mode")
+        '''
         self.btn_clear = QPushButton("Clear All")
-        self.btn_test = QPushButton("Test")
-        self.btn_test.setCheckable(True)
-        self.btn_test.setProperty("unit_type", "engine")
+        
+        self.btn_engine = QPushButton("engine")
+        self.btn_engine.setCheckable(True)
+        self.btn_engine.setProperty("unit_type", "engine")
+        self.btn_engine.setChecked(True)
 
+        self.btn_cruiser = QPushButton("cruiser")
+        self.btn_cruiser.setCheckable(True)
+        self.btn_cruiser.setProperty("unit_type", "cruiser")
+
+        self.btn_ambulance = QPushButton("ambulance")
+        self.btn_ambulance.setCheckable(True)
+        self.btn_ambulance.setProperty("unit_type", "ambulance")
+
+        self.btn_SUV_K9 = QPushButton("SUV/K9")
+        self.btn_SUV_K9.setCheckable(True)
+        self.btn_SUV_K9.setProperty("unit_type", "SUV/K9")
+
+        self.btn_ladder = QPushButton("Ladder Truck")
+        self.btn_ladder.setCheckable(True)
+        self.btn_ladder.setProperty("unit_type", "Ladder")
+
+
+
+        self.unit_group = QButtonGroup(self)
+        self.unit_group.addButton(self.btn_engine)
+        self.unit_group.addButton(self.btn_cruiser)
+        self.unit_group.addButton(self.btn_ambulance)
+        self.unit_group.addButton(self.btn_SUV_K9)
+        self.unit_group.addButton(self.btn_ladder)
 
         self.btn_clear.clicked.connect(self.clear_requested.emit)
-        layout.addWidget(self.btn_select)
-        layout.addWidget(self.btn_draw)
-        layout.addWidget(self.btn_clear)
+
+        layout.addWidget(self.btn_engine)
+        layout.addWidget(self.btn_cruiser)
+        layout.addWidget(self.btn_ambulance)
+        layout.addWidget(self.btn_SUV_K9)
+        layout.addWidget(self.btn_ladder)
         layout.addWidget(self.unit_list)
-        layout.addWidget(self.btn_test)
 
         layout.addStretch()
 
     def current_unit_type(self):
-        return self.btn_test.property("unit_type")
+        btn = self.unit_group.checkedButton()
+        return btn.property("unit_type") if btn else None
 
         
 
