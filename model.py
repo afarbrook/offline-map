@@ -3,11 +3,18 @@ from pathlib import Path
 from dataclasses import dataclass
 
 from PySide6.QtCore import QRectF, Qt, QPointF, QAbstractListModel, QModelIndex
-
+from PySide6.QtGui import QBrush, QColor
 import tile_source
 import mapping_functions
 import map_view
 import flag
+
+UNIT_COLORS = {"EN": QColor("#e04736"), "PM": QColor("#517adb"),
+               "LD": QColor("#cc8813"), "RE": QColor("#13ccaa"), 
+               "AC": QColor("#1dd62d"), "CR": QColor("#bad61d"),
+               "TN": QColor("#d06fd3"), "LQ": QColor("#b8c0b8"),
+               "FC": QColor("#8269ce")
+            }
 
 
 @dataclass 
@@ -67,10 +74,11 @@ class PlacementModel(QAbstractListModel):
             return f"{marker.id}  {marker.unit_type}"
  
         if role == Qt.ItemDataRole.DecorationRole:
-            pass
+            return UNIT_COLORS[marker.unit_type]
+
  
         if role == Qt.ItemDataRole.ToolTipRole:
-            pass
+            return f"{marker.unit_type} — {marker.status}"
  
         if role == Qt.ItemDataRole.UserRole:
             # your own data, invisible to the view -- e.g. a database id

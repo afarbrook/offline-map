@@ -10,16 +10,16 @@ from mapping_functions import world_to_latlon, latlon_to_world
 
 TILE = 256
 ZOOM = 16
-
+UNIT_COLORS = {"EN": QColor("#e04736"), "PM": QColor("#517adb"),
+               "LD": QColor("#cc8813"), "RE": QColor("#13ccaa"), 
+               "AC": QColor("#1dd62d"), "CR": QColor("#bad61d"),
+               "TN": QColor("#d06fd3"), "LQ": QColor("#b8c0b8"),
+               "FC": QColor("#8269ce")
+            }
 # flag class for constant item on screen
 class flag(QGraphicsEllipseItem):
 
-    colors = {"EN": QBrush(QColor("#e04736")), "PM": QBrush(QColor("#517adb")),
-               "LD": QBrush(QColor("#cc8813")), "RE": QBrush(QColor("#13ccaa")), 
-               "AC": QBrush(QColor("#1dd62d")), "CR": QBrush(QColor("#bad61d")),
-               "TN": QBrush(QColor("#d06fd3")), "LQ": QBrush(QColor("#b8c0b8")),
-               "FC": QBrush(QColor("#8269ce"))
-            }
+    
 
     def __init__(self, wx, wy, type="engine"):
         super().__init__(-6, -6, 18, 18)
@@ -27,7 +27,7 @@ class flag(QGraphicsEllipseItem):
         rect = self.label.boundingRect()
         self.label.setPos(3-rect.width() / 2, 3-rect.height() / 2)
         self.setPos(wx, wy)
-        self.setBrush(self.colors[type])
+        self.setBrush(QBrush(UNIT_COLORS[type]))
         self.setZValue(1)                              
         self.setFlags(
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations

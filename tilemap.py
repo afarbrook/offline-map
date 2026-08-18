@@ -27,6 +27,8 @@ from PySide6.QtWidgets import (
     QGridLayout
 )
 
+from PySide6.QtGui import QColor
+
 import tile_source
 import mapping_functions
 import flag
@@ -57,6 +59,7 @@ class MainWindow(QMainWindow):
         self.model = PlacementModel()
 
         self.scene = QGraphicsScene()
+        self.scene.setBackgroundBrush(QColor("#14171b"))
         x0, y0, x1, y1 = BBOX_TILES
         self.scene.setSceneRect(
             QRectF(
