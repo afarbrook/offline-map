@@ -23,7 +23,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QDockWidget,
     QListView,
-    QButtonGroup
+    QButtonGroup,
+    QGridLayout
 )
 
 import tile_source
@@ -34,6 +35,7 @@ from model import PlacementModel
 import placement_list_view
 
 MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
+STYLE_PATH = Path(__file__).parent / "styleSheet.qss"
 
 TILE = 256
 ZOOM = 16
@@ -151,7 +153,6 @@ class PlacementPanel(QWidget):
         self.btn_draw = QPushButton("Draw Mode")
         '''
         self.create_buttons()
-
         self.unit_group = QButtonGroup(self)
         self.unit_group.addButton(self.btn_engine)
         self.unit_group.addButton(self.btn_assistant_chief)
@@ -159,23 +160,30 @@ class PlacementPanel(QWidget):
         self.unit_group.addButton(self.btn_tender)
         self.unit_group.addButton(self.btn_light_squad)
         self.unit_group.addButton(self.btn_fire_chief)
-        self.unit_group.addButton(self.btn_fire_engine)
         self.unit_group.addButton(self.btn_paramedic)
         self.unit_group.addButton(self.btn_ladder)
         self.unit_group.addButton(self.btn_SUV)
 
         self.btn_clear.clicked.connect(self.clear_requested.emit)
 
-        layout.addWidget(self.btn_engine)
-        layout.addWidget(self.btn_assistant_chief)
-        layout.addWidget(self.btn_crash_truck)
-        layout.addWidget(self.btn_tender)
-        layout.addWidget(self.btn_light_squad)
-        layout.addWidget(self.btn_fire_chief)
-        layout.addWidget(self.btn_fire_engine)
-        layout.addWidget(self.btn_paramedic)
-        layout.addWidget(self.btn_ladder)
-        layout.addWidget(self.btn_SUV)
+        grid = QGridLayout()
+        grid.setSpacing(10)
+        grid.setColumnStretch(0, 1)
+        grid.setColumnStretch(1, 1)
+        grid.setColumnStretch(2, 1)
+
+        grid.addWidget(self.btn_engine, 0, 0)
+        grid.addWidget(self.btn_assistant_chief, 0, 1)
+        grid.addWidget(self.btn_crash_truck, 0 , 2)
+        grid.addWidget(self.btn_tender, 1, 0)
+        grid.addWidget(self.btn_light_squad, 1, 1)
+        grid.addWidget(self.btn_fire_chief, 1, 2)
+        grid.addWidget(self.btn_paramedic, 2, 0)
+        grid.addWidget(self.btn_ladder, 2, 1)
+        grid.addWidget(self.btn_SUV, 2, 2)
+
+        layout.addLayout(grid)
+        layout.addWidget(self.unit_list)
 
         layout.addStretch()
 
@@ -199,10 +207,6 @@ class PlacementPanel(QWidget):
         self.btn_engine.setCheckable(True)
         self.btn_engine.setProperty("unit_type", "EN")
         self.btn_engine.setChecked(True)
-
-        self.btn_fire_engine = QPushButton("Fire Engine")
-        self.btn_fire_engine.setCheckable(True)
-        self.btn_fire_engine.setProperty("unit_type", "EN")
 
         self.btn_paramedic = QPushButton("Paramedic")
         self.btn_paramedic.setCheckable(True)
@@ -242,6 +246,8 @@ class PlacementPanel(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    with open(STYLE_PATH) as f:
+        app.setStyleSheet(f.read())
     win = MainWindow()
     win.show()
     sys.exit(app.exec())

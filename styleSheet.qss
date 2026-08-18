@@ -1,0 +1,138 @@
+/* ===========================================================
+   Tucson tile map -- app stylesheet
+   =========================================================== */
+
+/* -- global font -------------------------------------------- */
+* {
+    font-family: Consolas, "Courier New", monospace;
+}
+
+/* -- app background ------------------------------------------ */
+QMainWindow {
+    background-color: #0e0e12;
+}
+
+/* -- dock panel ------------------------------------------------ */
+QDockWidget {
+    color: #cccccc;
+    background-color: #0e0e12;
+}
+
+QDockWidget::title {
+    background-color: #0e0e12;
+    color: #888888;
+    padding: 6px 4px;
+    border-bottom: 1px solid #2a2a30;
+}
+
+/* -- search bar (if/when added) -------------------------------- */
+QLineEdit {
+    background-color: #1a1a20;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    padding: 6px;
+    selection-background-color: #34495e;
+}
+QLineEdit:focus {
+    border: 1px solid #517adb;
+}
+
+/* -- buttons, general -------------------------------------------- */
+QPushButton {
+    background-color: #1a1a20;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    padding: 8px;
+    border-radius: 3px;
+    text-align: left;
+}
+QPushButton:hover {
+    background-color: #23232b;
+    border: 1px solid #3a3a42;
+}
+QPushButton:checked {
+    border: 2px solid white;
+}
+QPushButton:pressed {
+    background-color: #14141a;
+}
+
+/* -- unit type buttons, by property ------------------------------ */
+/* Solid fill so the color reads immediately; :checked still gets */
+/* the white ring from the general rule above, layered on top.    */
+QPushButton[unit_type="EN"] { background-color: #e04736; color: white; }
+QPushButton[unit_type="PM"] { background-color: #517adb; color: white; }
+QPushButton[unit_type="LD"] { background-color: #cc8813; color: white; }
+QPushButton[unit_type="RE"] { background-color: #13ccaa; color: #0e0e12; }
+QPushButton[unit_type="AC"] { background-color: #1dd62d; color: #0e0e12; }
+QPushButton[unit_type="CR"] { background-color: #bad61d; color: #0e0e12; }
+QPushButton[unit_type="TN"] { background-color: #d06fd3; color: white; }
+QPushButton[unit_type="LQ"] { background-color: #b8c0b8; color: #0e0e12; }
+QPushButton[unit_type="FC"] { background-color: #8269ce; color: white; }
+
+QPushButton[unit_type="EN"]:hover { background-color: #e85e4f; }
+QPushButton[unit_type="PM"]:hover { background-color: #6b8fe0; }
+QPushButton[unit_type="LD"]:hover { background-color: #d69a2e; }
+QPushButton[unit_type="RE"]:hover { background-color: #2fd6ba; }
+QPushButton[unit_type="AC"]:hover { background-color: #3ede4c; }
+QPushButton[unit_type="CR"]:hover { background-color: #c5de3d; }
+QPushButton[unit_type="TN"]:hover { background-color: #d888db; }
+QPushButton[unit_type="LQ"]:hover { background-color: #c5cbc5; }
+QPushButton[unit_type="FC"]:hover { background-color: #9683d6; }
+
+/* -- placements list --------------------------------------------- */
+QListView {
+    background-color: #0e0e12;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    outline: none;
+}
+QListView::item {
+    padding: 6px 4px;
+    border-bottom: 1px solid #1a1a20;
+}
+QListView::item:selected {
+    background-color: #23232b;
+    color: white;
+}
+QListView::item:hover {
+    background-color: #17171d;
+}
+
+/* -- status badges (labels, once wired up) ------------------------ */
+QLabel[status="SCENE"] {
+    color: #ff6b5a;
+    font-weight: bold;
+}
+QLabel[status="ENRTE"] {
+    color: #d4a017;
+    font-weight: bold;
+}
+QLabel[status="AVAIL"] {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* -- scrollbars, so they don't stay stock light-gray -------------- */
+QScrollBar:vertical {
+    background: #0e0e12;
+    width: 10px;
+}
+QScrollBar::handle:vertical {
+    background: #2a2a30;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #3a3a42;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+/* -- status bar --------------------------------------------------- */
+QStatusBar {
+    background-color: #0e0e12;
+    color: #777777;
+    border-top: 1px solid #2a2a30;
+}
