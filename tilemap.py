@@ -31,6 +31,7 @@ import mapping_functions
 import flag
 import map_view
 from model import PlacementModel
+import placement_list_view
 
 MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
 
@@ -83,6 +84,7 @@ class MainWindow(QMainWindow):
         self.model.dataChanged.connect(self.on_data_changed)
         self.view.map_clicked.connect(self.on_map_clicked)
         self.view.pin_deleted.connect(self.on_flag_deleted)
+        self.panel.pin_deleted.connect(self.on_flag_deleted)
 
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
 
@@ -121,18 +123,21 @@ class MainWindow(QMainWindow):
         if row is not None:
             self.model.remove(row)
 
+    
+
 
 
 class PlacementPanel(QWidget):
 
     unit_type_selected = Signal(str)
     clear_requested = Signal()
+    pin_deleted = Signal(int)
 
     def __init__(self, model, parent=None):
         super().__init__(parent)
         self.model = model
 
-        self.unit_list = QListView()
+        self.unit_list = placement_list_view.PlacementListView()
         self.unit_list.setModel(model)
         
 
@@ -145,54 +150,91 @@ class PlacementPanel(QWidget):
         self.btn_select = QPushButton("Select Mode")
         self.btn_draw = QPushButton("Draw Mode")
         '''
-        self.btn_clear = QPushButton("Clear All")
-        
-        self.btn_engine = QPushButton("engine")
-        self.btn_engine.setCheckable(True)
-        self.btn_engine.setProperty("unit_type", "engine")
-        self.btn_engine.setChecked(True)
-
-        self.btn_cruiser = QPushButton("cruiser")
-        self.btn_cruiser.setCheckable(True)
-        self.btn_cruiser.setProperty("unit_type", "cruiser")
-
-        self.btn_ambulance = QPushButton("ambulance")
-        self.btn_ambulance.setCheckable(True)
-        self.btn_ambulance.setProperty("unit_type", "ambulance")
-
-        self.btn_SUV_K9 = QPushButton("SUV/K9")
-        self.btn_SUV_K9.setCheckable(True)
-        self.btn_SUV_K9.setProperty("unit_type", "SUV/K9")
-
-        self.btn_ladder = QPushButton("Ladder Truck")
-        self.btn_ladder.setCheckable(True)
-        self.btn_ladder.setProperty("unit_type", "ladder")
-
-
+        self.create_buttons()
 
         self.unit_group = QButtonGroup(self)
         self.unit_group.addButton(self.btn_engine)
-        self.unit_group.addButton(self.btn_cruiser)
-        self.unit_group.addButton(self.btn_ambulance)
-        self.unit_group.addButton(self.btn_SUV_K9)
+        self.unit_group.addButton(self.btn_assistant_chief)
+        self.unit_group.addButton(self.btn_crash_truck)
+        self.unit_group.addButton(self.btn_tender)
+        self.unit_group.addButton(self.btn_light_squad)
+        self.unit_group.addButton(self.btn_fire_chief)
+        self.unit_group.addButton(self.btn_fire_engine)
+        self.unit_group.addButton(self.btn_paramedic)
         self.unit_group.addButton(self.btn_ladder)
+        self.unit_group.addButton(self.btn_SUV)
 
         self.btn_clear.clicked.connect(self.clear_requested.emit)
 
         layout.addWidget(self.btn_engine)
-        layout.addWidget(self.btn_cruiser)
-        layout.addWidget(self.btn_ambulance)
-        layout.addWidget(self.btn_SUV_K9)
+        layout.addWidget(self.btn_assistant_chief)
+        layout.addWidget(self.btn_crash_truck)
+        layout.addWidget(self.btn_tender)
+        layout.addWidget(self.btn_light_squad)
+        layout.addWidget(self.btn_fire_chief)
+        layout.addWidget(self.btn_fire_engine)
+        layout.addWidget(self.btn_paramedic)
         layout.addWidget(self.btn_ladder)
-        layout.addWidget(self.unit_list)
+        layout.addWidget(self.btn_SUV)
 
         layout.addStretch()
 
-        #self.unit_list.selectionModel().selectionChanged.connect(self.on_list_selection)
+        self.unit_list.selectionModel().selectionChanged.connect(self.on_list_selection)
+        self.unit_list.pin_deleted.connect(self.pin_deleted.emit)
 
     def current_unit_type(self):
         btn = self.unit_group.checkedButton()
         return btn.property("unit_type") if btn else None
+
+    def on_list_selection(self):
+        indexes = self.unit_list.selectedIndexes()
+        if indexes:
+            row = indexes[0].row()
+            placement = self.model.at(row)
+
+    def create_buttons(self):
+        self.btn_clear = QPushButton("Clear All")
+                
+        self.btn_engine = QPushButton("Engine")
+        self.btn_engine.setCheckable(True)
+        self.btn_engine.setProperty("unit_type", "EN")
+        self.btn_engine.setChecked(True)
+
+        self.btn_fire_engine = QPushButton("Fire Engine")
+        self.btn_fire_engine.setCheckable(True)
+        self.btn_fire_engine.setProperty("unit_type", "EN")
+
+        self.btn_paramedic = QPushButton("Paramedic")
+        self.btn_paramedic.setCheckable(True)
+        self.btn_paramedic.setProperty("unit_type", "PM")
+
+        self.btn_SUV = QPushButton("SUV")
+        self.btn_SUV.setCheckable(True)
+        self.btn_SUV.setProperty("unit_type", "RE")
+
+        self.btn_ladder = QPushButton("Ladder Truck")
+        self.btn_ladder.setCheckable(True)
+        self.btn_ladder.setProperty("unit_type", "LD")
+
+        self.btn_light_squad = QPushButton("Light Squad")
+        self.btn_light_squad.setCheckable(True)
+        self.btn_light_squad.setProperty("unit_type", "LQ")
+
+        self.btn_fire_chief = QPushButton("Fire Chief")
+        self.btn_fire_chief.setCheckable(True)
+        self.btn_fire_chief.setProperty("unit_type", "FC")
+
+        self.btn_tender = QPushButton("Tender")
+        self.btn_tender.setCheckable(True)
+        self.btn_tender.setProperty("unit_type", "TN")
+
+        self.btn_crash_truck = QPushButton("Crash Truck")
+        self.btn_crash_truck.setCheckable(True)
+        self.btn_crash_truck.setProperty("unit_type", "CR")  
+
+        self.btn_assistant_chief = QPushButton("Assistant Chief")
+        self.btn_assistant_chief.setCheckable(True)
+        self.btn_assistant_chief.setProperty("unit_type", "AC")
 
 
         

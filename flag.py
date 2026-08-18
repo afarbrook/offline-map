@@ -2,7 +2,8 @@ from PySide6.QtCore import QPointF
 from PySide6.QtGui import QBrush, QColor
 from PySide6.QtWidgets import (
     QGraphicsEllipseItem,
-    QGraphicsItem
+    QGraphicsItem,
+    QGraphicsSimpleTextItem
 )
 from mapping_functions import world_to_latlon, latlon_to_world
 
@@ -13,13 +14,18 @@ ZOOM = 16
 # flag class for constant item on screen
 class flag(QGraphicsEllipseItem):
 
-    colors = {"engine": QBrush(QColor("#c0392b")), "ambulance": QBrush(QColor("#3a589d")),
-               "ladder": QBrush(QColor("#cc8813")), "SUV/K9": QBrush(QColor("#13ccaa")), 
-               "cruiser": QBrush(QColor("#1dd62d")) 
+    colors = {"EN": QBrush(QColor("#e04736")), "PM": QBrush(QColor("#517adb")),
+               "LD": QBrush(QColor("#cc8813")), "RE": QBrush(QColor("#13ccaa")), 
+               "AC": QBrush(QColor("#1dd62d")), "CR": QBrush(QColor("#bad61d")),
+               "TN": QBrush(QColor("#d06fd3")), "LQ": QBrush(QColor("#b8c0b8")),
+               "FC": QBrush(QColor("#8269ce"))
             }
 
     def __init__(self, wx, wy, type="engine"):
-        super().__init__(-6, -6, 12, 12)
+        super().__init__(-6, -6, 18, 18)
+        self.label = QGraphicsSimpleTextItem(type, self)
+        rect = self.label.boundingRect()
+        self.label.setPos(3-rect.width() / 2, 3-rect.height() / 2)
         self.setPos(wx, wy)
         self.setBrush(self.colors[type])
         self.setZValue(1)                              
