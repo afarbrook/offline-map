@@ -37,7 +37,7 @@ from model import PlacementModel
 import placement_list_view
 
 MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
-STYLE_PATH = Path(__file__).parent / "styleSheet.qss"
+STYLE_PATH = Path(__file__).parent / "./style/styleSheet.qss"
 
 TILE = 256
 ZOOM = 16
