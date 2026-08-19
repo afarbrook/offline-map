@@ -24,7 +24,8 @@ from PySide6.QtWidgets import (
     QDockWidget,
     QListView,
     QButtonGroup,
-    QGridLayout
+    QGridLayout,
+    QLabel
 )
 
 from PySide6.QtGui import QColor
@@ -35,6 +36,7 @@ import flag
 import map_view
 from model import PlacementModel
 import placement_list_view
+from unit_buttons import UnitPushButton
 
 MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
 STYLE_PATH = Path(__file__).parent / "./style/styleSheet.qss"
@@ -53,7 +55,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Tucson tile map")
-        self.resize(1280, 720)
+        self.resize(1600,900)
         self._pins = {}
         self.source = tile_source.TileSource(MBTILES_PATH)
         self.model = PlacementModel()
@@ -78,9 +80,19 @@ class MainWindow(QMainWindow):
         self.view.centerOn(wx, wy)
         self.view.refresh_tiles()
 
+        title = QLabel("CAD / UNIT PLACEMENT")
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title.setStyleSheet(
+            f"color: white; padding-left: 1px; padding-top: 5px;"
+            f"border-radius: 10px; border-color: white;"
+            f"font-size: 18px; qproperty-alignment: 'AlignLeft'"
+    
+        )
         
         self.panel = PlacementPanel(self.model)
-        dock = QDockWidget("Placements", self)
+        dock = QDockWidget(self)
+
+        dock.setTitleBarWidget(title)
         dock.setWidget(self.panel)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
 
@@ -116,7 +128,14 @@ class MainWindow(QMainWindow):
             self._pins[placed.id] = None
 
     def on_data_changed(self, topLeft, bottomRight, roles=None):
-        pass
+        for row in range(topLeft.row(), bottomRight.row() + 1):
+            placed = self.model.at(row)
+            f = self._pins.get(placed.id)
+            print(1)
+            if f is None:
+                continue
+            wx, wy = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
+            f.setPos(wx, wy)
 
     def on_map_clicked(self, lat, lon):
         unit_type = self.panel.current_unit_type()
@@ -144,8 +163,9 @@ class PlacementPanel(QWidget):
 
         self.unit_list = placement_list_view.PlacementListView()
         self.unit_list.setModel(model)
+        self.unit_list.setMaximumHeight(500)
         
-
+        
         # 2. Set up a vertical layout inside the container
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
@@ -185,8 +205,29 @@ class PlacementPanel(QWidget):
         grid.addWidget(self.btn_ladder, 2, 1)
         grid.addWidget(self.btn_SUV, 2, 2)
 
+        subtitle = QLabel("PLACE UNIT — CLICK TYPE, THEN MAP")
+        subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        subtitle.setStyleSheet(
+            f"color: #7b7f85; "
+            f"border-radius: 10px; border-color: white;"
+            f"font-size: 12px; qproperty-alignment: 'AlignLeft'"
+    
+        )
+
+        text = QLabel("DEPLOYED UNITS")
+        text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        text.setStyleSheet(
+            f"color: #7b7f85; "
+            f"border-radius: 4px;"
+            f"font-size: 12px; qproperty-alignment: 'AlignLeft'"
+    
+        )
+
+        layout.addWidget(subtitle)
         layout.addLayout(grid)
-        layout.addWidget(self.unit_list)
+        layout.addWidget(text)
+        layout.addWidget(self.unit_list, stretch=1)
+        
 
         layout.addStretch()
 
@@ -206,40 +247,40 @@ class PlacementPanel(QWidget):
     def create_buttons(self):
         self.btn_clear = QPushButton("Clear All")
                 
-        self.btn_engine = QPushButton("Engine")
+        self.btn_engine = UnitPushButton("EN", "Engine", "TFD · TRUCK", "#e04736", "EN")
         self.btn_engine.setCheckable(True)
         self.btn_engine.setProperty("unit_type", "EN")
         self.btn_engine.setChecked(True)
 
-        self.btn_paramedic = QPushButton("Paramedic")
+        self.btn_paramedic = UnitPushButton("PM", "Paramedic", "TFD · BOX", "#517adb", "PM")
         self.btn_paramedic.setCheckable(True)
         self.btn_paramedic.setProperty("unit_type", "PM")
 
-        self.btn_SUV = QPushButton("SUV")
+        self.btn_SUV = UnitPushButton("RE", "SUV", "TPD · SUV", "#13ccaa", "RE")
         self.btn_SUV.setCheckable(True)
         self.btn_SUV.setProperty("unit_type", "RE")
 
-        self.btn_ladder = QPushButton("Ladder Truck")
+        self.btn_ladder = UnitPushButton("LD", "Ladder", "TFD · LD", "#cc8813", "LD")
         self.btn_ladder.setCheckable(True)
         self.btn_ladder.setProperty("unit_type", "LD")
 
-        self.btn_light_squad = QPushButton("Light Squad")
+        self.btn_light_squad = UnitPushButton("LQ", "Light Squad", "TPD · SUV", "#b8c0b8", "LQ")
         self.btn_light_squad.setCheckable(True)
         self.btn_light_squad.setProperty("unit_type", "LQ")
 
-        self.btn_fire_chief = QPushButton("Fire Chief")
+        self.btn_fire_chief = UnitPushButton("FC", "Fire Chief", "TFD · SEDAN", "#8269ce", "FC")
         self.btn_fire_chief.setCheckable(True)
         self.btn_fire_chief.setProperty("unit_type", "FC")
 
-        self.btn_tender = QPushButton("Tender")
+        self.btn_tender = UnitPushButton("TN", "Tender", "TFD · SEDAN", "#d06fd3", "TN")
         self.btn_tender.setCheckable(True)
         self.btn_tender.setProperty("unit_type", "TN")
 
-        self.btn_crash_truck = QPushButton("Crash Truck")
+        self.btn_crash_truck = UnitPushButton("CR", "Crash Truck", "TPD · TRUCK", "#bad61d", "CR")
         self.btn_crash_truck.setCheckable(True)
         self.btn_crash_truck.setProperty("unit_type", "CR")  
 
-        self.btn_assistant_chief = QPushButton("Assistant Chief")
+        self.btn_assistant_chief = UnitPushButton("AC", "Asst. Chief", "TFD · SEDAN", "#1dd62d", "AC")
         self.btn_assistant_chief.setCheckable(True)
         self.btn_assistant_chief.setProperty("unit_type", "AC")
 

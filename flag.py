@@ -21,7 +21,7 @@ class flag(QGraphicsEllipseItem):
 
     
 
-    def __init__(self, wx, wy, type="engine"):
+    def __init__(self, wx, wy, on_moved, type="engine"):
         super().__init__(-6, -6, 18, 18)
         self.label = QGraphicsSimpleTextItem(type, self)
         rect = self.label.boundingRect()
@@ -39,12 +39,13 @@ class flag(QGraphicsEllipseItem):
             QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True
         )
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
+        self._on_moved = on_moved
 
    
 
     def setLatlon(self, wx, wy): 
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
-
+    
     def itemChange(self, change, value):
         if (
             change == QGraphicsItem.GraphicsItemChange.ItemPositionChange
@@ -56,6 +57,8 @@ class flag(QGraphicsEllipseItem):
             
             x = new_pos.x()
             y = new_pos.y()
+
+            
 
             return QPointF(x, y)  # Return the snapped coordinates
 

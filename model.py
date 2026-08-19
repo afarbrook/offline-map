@@ -71,7 +71,7 @@ class PlacementModel(QAbstractListModel):
         marker = self._placement[index.row()]
 
         if role == Qt.ItemDataRole.DisplayRole:
-            return f"{marker.id}  {marker.unit_type}"
+            return f"{marker.unit_id}  {marker.unit_type} \n{marker.lat:.5f}, {marker.lon:.5f}"
  
         if role == Qt.ItemDataRole.DecorationRole:
             return UNIT_COLORS[marker.unit_type]

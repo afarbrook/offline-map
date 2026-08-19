@@ -44,7 +44,6 @@ QPushButton {
     background-color: #1a1a20;
     color: #d0d0d0;
     border: 1px solid #2a2a30;
-    padding: 8px;
     border-radius: 3px;
     text-align: left;
 }
@@ -58,33 +57,18 @@ QPushButton:checked {
 QPushButton:pressed {
     background-color: #14141a;
 }
+UnitPushButton {
+    padding: 0px;
+}
 
 /* -- unit type buttons, by property ------------------------------ */
 /* Solid fill so the color reads immediately; :checked still gets */
 /* the white ring from the general rule above, layered on top.    */
-QPushButton[unit_type="EN"] { background-color: #e04736; color: white; }
-QPushButton[unit_type="PM"] { background-color: #517adb; color: white; }
-QPushButton[unit_type="LD"] { background-color: #cc8813; color: white; }
-QPushButton[unit_type="RE"] { background-color: #13ccaa; color: #0e0e12; }
-QPushButton[unit_type="AC"] { background-color: #1dd62d; color: #0e0e12; }
-QPushButton[unit_type="CR"] { background-color: #bad61d; color: #0e0e12; }
-QPushButton[unit_type="TN"] { background-color: #d06fd3; color: white; }
-QPushButton[unit_type="LQ"] { background-color: #b8c0b8; color: #0e0e12; }
-QPushButton[unit_type="FC"] { background-color: #8269ce; color: white; }
 
-QPushButton[unit_type="EN"]:hover { background-color: #e85e4f; }
-QPushButton[unit_type="PM"]:hover { background-color: #6b8fe0; }
-QPushButton[unit_type="LD"]:hover { background-color: #d69a2e; }
-QPushButton[unit_type="RE"]:hover { background-color: #2fd6ba; }
-QPushButton[unit_type="AC"]:hover { background-color: #3ede4c; }
-QPushButton[unit_type="CR"]:hover { background-color: #c5de3d; }
-QPushButton[unit_type="TN"]:hover { background-color: #d888db; }
-QPushButton[unit_type="LQ"]:hover { background-color: #c5cbc5; }
-QPushButton[unit_type="FC"]:hover { background-color: #9683d6; }
 
 /* -- placements list --------------------------------------------- */
 QListView {
-    background-color: #252530;
+    background-color: #14171b;
     color: #d0d0d0;
     border: 1px solid #2a2a30;
     outline: none;
