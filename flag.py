@@ -46,20 +46,11 @@ class flag(QGraphicsEllipseItem):
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
     
     def itemChange(self, change, value):
-        if (
-            change == QGraphicsItem.GraphicsItemChange.ItemPositionChange
-            and self.scene()
-        ):
-            new_pos = value
-            grid_size = 30 
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange and self.scene():
+            return value
 
-            
-            x = new_pos.x()
-            y = new_pos.y()
-            lat, lon = world_to_latlon(x, y, ZOOM)
-
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionHasChanged and self.scene():
+            lat, lon = world_to_latlon(value.x(), value.y(), ZOOM)
             self._on_moved(self._id, lat, lon)
-
-            return QPointF(x, y)  # Return the snapped coordinates
 
         return super().itemChange(change, value)

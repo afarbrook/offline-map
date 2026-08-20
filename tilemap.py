@@ -13,7 +13,7 @@ Run:  python tilemap.py
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QRectF, Qt, Signal
+from PySide6.QtCore import QRectF, Qt, Signal, QPointF
 from PySide6.QtWidgets import (
     QApplication,
     QGraphicsScene,
@@ -115,7 +115,7 @@ class MainWindow(QMainWindow):
         for row in range(first, last + 1):
             placed = self.model.at(row)
             x, y = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
-            f = flag.flag(x, y, placed.id, self.on_moved, self.panel.current_unit_type())
+            f = flag.flag(x, y, self.on_moved, placed.id, self.panel.current_unit_type())
             f.setData(0, placed.id) 
             self.scene.addItem(f)
             self._pins[placed.id] = f # add to our own record
@@ -125,17 +125,17 @@ class MainWindow(QMainWindow):
             placed = self.model.at(row)
             f = self._pins[placed.id]
             self.scene.removeItem(f)
-            self._pins[placed.id] = None
+            del self._pins[placed.id]
 
     def on_data_changed(self, topLeft, bottomRight, roles=None):
         for row in range(topLeft.row(), bottomRight.row() + 1):
             placed = self.model.at(row)
             f = self._pins.get(placed.id)
-            print(1)
             if f is None:
                 continue
             wx, wy = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
-            f.setPos(wx, wy)
+            if f.pos() != QPointF(wx, wy):
+                f.setPos(wx, wy)
 
     def on_map_clicked(self, lat, lon):
         unit_type = self.panel.current_unit_type()
