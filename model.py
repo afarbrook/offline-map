@@ -96,6 +96,8 @@ class PlacementModel(QAbstractListModel):
             if self._placement[place].id == ID:
                 return place
         return None
+
+    
          
 
         

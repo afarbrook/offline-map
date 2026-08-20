@@ -19,9 +19,7 @@ UNIT_COLORS = {"EN": QColor("#e04736"), "PM": QColor("#517adb"),
 # flag class for constant item on screen
 class flag(QGraphicsEllipseItem):
 
-    
-
-    def __init__(self, wx, wy, on_moved, type="engine"):
+    def __init__(self, wx, wy, on_moved, id, type="EN"):
         super().__init__(-6, -6, 18, 18)
         self.label = QGraphicsSimpleTextItem(type, self)
         rect = self.label.boundingRect()
@@ -40,6 +38,7 @@ class flag(QGraphicsEllipseItem):
         )
         self._lat, self._lon = world_to_latlon(wx, wy, ZOOM)
         self._on_moved = on_moved
+        self._id = id
 
    
 
@@ -57,8 +56,9 @@ class flag(QGraphicsEllipseItem):
             
             x = new_pos.x()
             y = new_pos.y()
+            lat, lon = world_to_latlon(x, y, ZOOM)
 
-            
+            self._on_moved(self._id, lat, lon)
 
             return QPointF(x, y)  # Return the snapped coordinates
 
