@@ -13,7 +13,8 @@ from PySide6.QtWidgets import (
     QListView,
     QButtonGroup,
     QGridLayout,
-    QLabel
+    QLabel,
+    QTableView
 )
 
 from PySide6.QtGui import QColor
@@ -24,7 +25,7 @@ import flag
 import map_view
 from model import PlacementModel
 from inventory_model import InventoryModel
-import placement_list_view
+import views
 from unit_buttons import UnitPushButton
 
 class PlacementPanel(QWidget):
@@ -37,7 +38,7 @@ class PlacementPanel(QWidget):
         super().__init__(parent)
         self.model = model
 
-        self.unit_list = placement_list_view.PlacementListView()
+        self.unit_list = views.PlacementListView()
         self.unit_list.setModel(model)
         self.unit_list.setMaximumHeight(500)
         
@@ -163,14 +164,18 @@ class PlacementPanel(QWidget):
 
 class InventoryPanel(QWidget):
 
-
+    vehicle_selected = Signal(str)
     def __init__(self, model, parent=None):
         super().__init__(parent)
-        self.model = model
+        self.inventory_model = model
 
-        self.fleet_list = placement_list_view.PlacementListView()
-        self.fleet_list.setModel(model)
-        self.fleet_list.setMaximumHeight(500)
+        self.inventory_view = views.InventoryTableView()
+        self.inventory_view.setModel(self.inventory_model)
+        self.inventory_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.inventory_view.setSortingEnabled(True)
+        self.inventory_view.horizontalHeader().setStretchLastSection(True)
+
+        self.inventory_view.vehicle_selected.connect(self.vehicle_selected)
         
         
         

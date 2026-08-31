@@ -35,9 +35,10 @@ import tile_source
 import mapping_functions
 import flag
 import map_view
+import time
 from model import PlacementModel
 from inventory_model import InventoryModel
-import placement_list_view
+import views
 from unit_buttons import UnitPushButton
 from panels import PlacementPanel, InventoryPanel
 
@@ -55,7 +56,7 @@ BBOX_TILES = (12542, 26538, 12615, 26602)
 START_LAT, START_LON = 32.2319, -110.9501
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow): 
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Tucson tile map")
@@ -64,6 +65,7 @@ class MainWindow(QMainWindow):
         self.source = tile_source.TileSource(MBTILES_PATH)
         self.model = PlacementModel()
         self.inventory_model = InventoryModel(INVENTORY_PATH)
+        
 
         self.scene = QGraphicsScene()
         self.scene.setBackgroundBrush(QColor("#14171b"))
@@ -95,6 +97,7 @@ class MainWindow(QMainWindow):
         )
         
         self.panel = PlacementPanel(self.model)
+
         self.inventory_panel = InventoryPanel(self.inventory_model)
 
         tabs = QTabWidget()
@@ -152,7 +155,10 @@ class MainWindow(QMainWindow):
     def on_map_clicked(self, lat, lon):
         unit_type = self.panel.current_unit_type()
         if unit_type is not None:
-            self.model.add(lat, lon , 5, unit_type, 5, 5)
+            next_unit = self.inventory_model.get_next(unit_type)
+            if next_unit is None:
+                return
+            self.model.add(lat, lon , next_unit.unit_id, unit_type, 5, time.time())
 
     def on_flag_deleted(self, id):
         row = self.model.row_of_id(id)
