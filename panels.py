@@ -167,13 +167,18 @@ class InventoryPanel(QWidget):
     vehicle_selected = Signal(str)
     def __init__(self, model, parent=None):
         super().__init__(parent)
+        
         self.inventory_model = model
-
         self.inventory_view = views.InventoryTableView()
         self.inventory_view.setModel(self.inventory_model)
         self.inventory_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.inventory_view.setSortingEnabled(True)
         self.inventory_view.horizontalHeader().setStretchLastSection(True)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(10)
+        layout.addWidget(self.inventory_view)
 
         self.inventory_view.vehicle_selected.connect(self.vehicle_selected)
         

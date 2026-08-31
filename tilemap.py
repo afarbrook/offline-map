@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         self.model = PlacementModel()
         self.inventory_model = InventoryModel(INVENTORY_PATH)
         
+        self._selected_vehicle_id = None
 
         self.scene = QGraphicsScene()
         self.scene.setBackgroundBrush(QColor("#14171b"))
@@ -117,6 +118,8 @@ class MainWindow(QMainWindow):
         self.view.map_clicked.connect(self.on_map_clicked)
         self.view.pin_deleted.connect(self.on_flag_deleted)
         self.panel.pin_deleted.connect(self.on_flag_deleted)
+        self.inventory_panel.vehicle_selected.connect(self.on_vehicle_selected)
+
 
         self.statusBar().showMessage("Drag to pan, scroll to zoom.")
 
@@ -130,7 +133,7 @@ class MainWindow(QMainWindow):
         for row in range(first, last + 1):
             placed = self.model.at(row)
             x, y = mapping_functions.latlon_to_world(placed.lat, placed.lon, ZOOM)
-            f = flag.flag(x, y, self.on_moved, placed.id, self.panel.current_unit_type())
+            f = flag.flag(x, y, self.on_moved, placed.id, placed.unit_type)
             f.setData(0, placed.id) 
             self.scene.addItem(f)
             self._pins[placed.id] = f # add to our own record
@@ -152,13 +155,22 @@ class MainWindow(QMainWindow):
             if f.pos() != QPointF(wx, wy):
                 f.setPos(wx, wy)
 
+    def on_vehicle_selected(self, unit_id):
+        self._selected_vehicle_id = unit_id
+
     def on_map_clicked(self, lat, lon):
-        unit_type = self.panel.current_unit_type()
-        if unit_type is not None:
-            next_unit = self.inventory_model.get_next(unit_type)
+        if self._selected_vehicle_id:
+            next_unit = self.inventory_model.get_vehicle_with_ID(self._selected_vehicle_id)
             if next_unit is None:
                 return
-            self.model.add(lat, lon , next_unit.unit_id, unit_type, 5, time.time())
+            self._selected_vehicle_id = None
+        else:
+            unit_type = self.panel.current_unit_type()
+            if unit_type is not None:
+                next_unit = self.inventory_model.get_next(unit_type)
+                if next_unit is None:
+                    return
+        self.model.add(lat, lon , next_unit.unit_id, next_unit.unit_type, 5, time.time())
 
     def on_flag_deleted(self, id):
         row = self.model.row_of_id(id)

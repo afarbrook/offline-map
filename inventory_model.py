@@ -24,9 +24,6 @@ class InventoryModel(QAbstractTableModel):
                 v = Vehicle(row["unit_id"], row["unit_type"], row["status"], row["origin"])
                 self._fleet.append(v)
 
-        
-    def rowCount(self, parent=QModelIndex()):
-        return len(self._vehicles)
 
     def columnCount(self, parent=QModelIndex()):
         return len(self.COLUMNS)
@@ -38,7 +35,7 @@ class InventoryModel(QAbstractTableModel):
     def get_next(self, unit_type="EN"):
         for vehicle in self._fleet:
             if vehicle.unit_type == unit_type and vehicle.status == "AVAILABLE":
-                vehicle.status = "busy"
+                vehicle.status = "BUSY"
                 return vehicle
         return None
 
@@ -48,7 +45,7 @@ class InventoryModel(QAbstractTableModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if not index.isValid():
             return None
-        v = self._vehicles[index.row()]
+        v = self._fleet[index.row()]
         col = self.COLUMNS[index.column()]
 
         if role == Qt.ItemDataRole.DisplayRole:
@@ -64,4 +61,13 @@ class InventoryModel(QAbstractTableModel):
 
     def __str__(self):
         return str(self._fleet)
+
+    def get_vehicle_with_ID(self, ID):
+        for x in self._fleet:
+            if x.unit_id == ID and x.status == "AVAILABLE":
+                x.status = "BUSY"
+                return x
+        return None
+
+    
         

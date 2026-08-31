@@ -13,7 +13,7 @@ UNIT_COLORS = {"EN": QColor("#e04736"), "PM": QColor("#517adb"),
                "LD": QColor("#cc8813"), "RE": QColor("#13ccaa"), 
                "AC": QColor("#1dd62d"), "CR": QColor("#bad61d"),
                "TN": QColor("#d06fd3"), "LQ": QColor("#b8c0b8"),
-               "FC": QColor("#8269ce")
+               "FC": QColor("#8269ce"), "OTHER": QColor("#6c6f6c")
             }
 
 
