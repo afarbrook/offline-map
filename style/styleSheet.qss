@@ -159,3 +159,44 @@ QGraphicsView {
     border: 1px solid #14171b;
     outline: none;
 }
+QTabWidget::pane {
+    border: 1px solid #2a2a30;
+    background-color: #1d1d25;
+}
+QTabBar::tab {
+    background-color: #1a1a20;
+    color: #888888;
+    padding: 8px 16px;
+    border: 1px solid #2a2a30;
+    border-bottom: none;
+}
+QTabBar::tab:selected {
+    background-color: #1d1d25;
+    color: #d0d0d0;
+    border-bottom: 2px solid #517adb;
+}
+QTabBar::tab:hover {
+    background-color: #23232b;
+}
+QTableView {
+    background-color: #0e0e12;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    gridline-color: #1a1a20;
+    outline: none;
+}
+QTableView::item {
+    padding: 4px;
+}
+QTableView::item:selected {
+    background-color: #23232b;
+    color: white;
+}
+QHeaderView::section {
+    background-color: #1a1a20;
+    color: #888888;
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid #2a2a30;
+    border-right: 1px solid #1a1a20;
+}

@@ -127,7 +127,7 @@ class PlacementPanel(QWidget):
         self.btn_engine = UnitPushButton("EN", "Engine", "TFD · TRUCK", "#e04736", "EN")
         self.btn_engine.setCheckable(True)
         self.btn_engine.setProperty("unit_type", "EN")
-        self.btn_engine.setChecked(True)
+        #self.btn_engine.setChecked(True)
 
         self.btn_paramedic = UnitPushButton("PM", "Paramedic", "TFD · BOX", "#517adb", "PM")
         self.btn_paramedic.setCheckable(True)

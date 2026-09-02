@@ -69,5 +69,15 @@ class InventoryModel(QAbstractTableModel):
                 return x
         return None
 
+    def setAvailable(self, ID):
+        for row, v in enumerate(self._fleet):
+            if v.unit_id == ID:
+                v.status = "AVAILABLE"
+                idx = self.index(row, self.COLUMNS.index("status"))
+                self.dataChanged.emit(idx, idx)
+                return
+                
+                            
+
     
         

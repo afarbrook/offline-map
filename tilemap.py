@@ -159,6 +159,7 @@ class MainWindow(QMainWindow):
         self._selected_vehicle_id = unit_id
 
     def on_map_clicked(self, lat, lon):
+        next_unit = None
         if self._selected_vehicle_id:
             next_unit = self.inventory_model.get_vehicle_with_ID(self._selected_vehicle_id)
             if next_unit is None:
@@ -168,14 +169,16 @@ class MainWindow(QMainWindow):
             unit_type = self.panel.current_unit_type()
             if unit_type is not None:
                 next_unit = self.inventory_model.get_next(unit_type)
-                if next_unit is None:
-                    return
+            if next_unit is None:
+                return
         self.model.add(lat, lon , next_unit.unit_id, next_unit.unit_type, 5, time.time())
 
     def on_flag_deleted(self, id):
         row = self.model.row_of_id(id)
         if row is not None:
+            flg = self.model.at(row).unit_id
             self.model.remove(row)
+            self.inventory_model.setAvailable(flg)
 
     def on_moved(self, id, lat, lon):
         row = self.model.row_of_id(id)
