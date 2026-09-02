@@ -3,11 +3,9 @@ from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import (
     QGraphicsPixmapItem,
     QGraphicsView,
-    QWidget, 
-    QVBoxLayout
+    
 )
-from mapping_functions import world_to_latlon, latlon_to_world
-import flag
+from mapping_functions import world_to_latlon
 
 
 TILE = 256

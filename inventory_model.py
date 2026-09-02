@@ -1,9 +1,8 @@
-import sys
-from pathlib import Path
 from dataclasses import dataclass
 import csv
 
-from PySide6.QtCore import QRectF, Qt, QModelIndex, QAbstractTableModel
+from PySide6.QtCore import Qt, QModelIndex, QAbstractTableModel
+from PySide6.QtGui import QColor
 
 @dataclass
 class Vehicle:
@@ -52,6 +51,12 @@ class InventoryModel(QAbstractTableModel):
             return getattr(v, col)
         if role == Qt.ItemDataRole.UserRole:
             return v
+        if role == Qt.ItemDataRole.ForegroundRole:
+            if v.status == "AVAILABLE":
+                return QColor("#888888")
+            elif v.status == "BUSY":  
+                return QColor("#ff6b5a")
+            return None
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):

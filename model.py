@@ -1,13 +1,8 @@
-import sys
-from pathlib import Path
 from dataclasses import dataclass
 
-from PySide6.QtCore import QRectF, Qt, QPointF, QAbstractListModel, QModelIndex
-from PySide6.QtGui import QBrush, QColor
-import tile_source
-import mapping_functions
-import map_view
-import flag
+from PySide6.QtCore import Qt, QAbstractListModel, QModelIndex
+from PySide6.QtGui import QColor
+
 
 UNIT_COLORS = {"EN": QColor("#e04736"), "PM": QColor("#517adb"),
                "LD": QColor("#cc8813"), "RE": QColor("#13ccaa"), 

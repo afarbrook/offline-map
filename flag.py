@@ -1,11 +1,10 @@
-from PySide6.QtCore import QPointF
 from PySide6.QtGui import QBrush, QColor
 from PySide6.QtWidgets import (
     QGraphicsEllipseItem,
     QGraphicsItem,
     QGraphicsSimpleTextItem
 )
-from mapping_functions import world_to_latlon, latlon_to_world
+from mapping_functions import world_to_latlon
 
 
 TILE = 256
@@ -21,7 +20,7 @@ class flag(QGraphicsEllipseItem):
 
     def __init__(self, wx, wy, on_moved, id, type="EN"):
         super().__init__(-6, -6, 18, 18)
-        self.label = QGraphicsSimpleTextItem(type, self)
+        self.label = QGraphicsSimpleTextItem(type[:2], self)
         rect = self.label.boundingRect()
         self.label.setPos(3-rect.width() / 2, 3-rect.height() / 2)
         self.setPos(wx, wy)

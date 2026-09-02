@@ -1,0 +1,202 @@
+/* ===========================================================
+   Tucson tile map -- app stylesheet
+   =========================================================== */
+
+/* -- global font -------------------------------------------- */
+* {
+    font-family: Consolas, "Courier New", monospace;
+}
+
+/* -- app background ------------------------------------------ */
+QMainWindow {
+    background-color: #1a1e23;
+}
+
+/* -- dock panel ------------------------------------------------ */
+QDockWidget {
+    color: #888888;
+    background-color: #1d1d25;
+}
+
+QDockWidget::title {
+    background-color: #252530;
+    color: #888888;
+    padding: 6px 4px;
+    border-bottom: 1px solid #2a2a30;
+}
+
+
+
+/* -- search bar (if/when added) -------------------------------- */
+QLineEdit {
+    background-color: #1a1a20;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    padding: 6px;
+    selection-background-color: #14171b;
+}
+QLineEdit:focus {
+    border: 1px solid #517adb;
+}
+
+/* -- buttons, general -------------------------------------------- */
+QPushButton {
+    background-color: #1a1a20;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    border-radius: 3px;
+    text-align: left;
+}
+QPushButton:hover {
+    background-color: #23232b;
+    border: 1px solid #3a3a42;
+}
+QPushButton:checked {
+    border: 2px solid white;
+}
+QPushButton:pressed {
+    background-color: #14141a;
+}
+UnitPushButton {
+    padding: 0px;
+}
+
+/* -- unit type buttons, by property ------------------------------ */
+/* Solid fill so the color reads immediately; :checked still gets */
+/* the white ring from the general rule above, layered on top.    */
+
+
+/* -- placements list --------------------------------------------- */
+QListView {
+    background-color: #14171b;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    outline: none;
+}
+QListView::item {
+    padding: 6px 4px;
+    border-bottom: 1px solid #1a1a20;
+    background-color: #252530;
+}
+QListView::item:selected {
+    background-color: #23232b;
+    color: white;
+}
+QListView::item:hover {
+    background-color: #17171d;
+}
+
+/* -- status badges (labels, once wired up) ------------------------ */
+QLabel[status="SCENE"] {
+    color: #ff6b5a;
+    font-weight: bold;
+}
+QLabel[status="ENRTE"] {
+    color: #d4a017;
+    font-weight: bold;
+}
+QLabel[status="AVAIL"] {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* -- scrollbars ---------------------------------------------- */
+QScrollBar:vertical {
+    background: #14171b;
+    width: 10px;
+    margin: 0px;
+}
+QScrollBar::handle:vertical {
+    background: #2a2a30;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #3a3a42;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+    background: none;
+    border: none;
+}
+QScrollBar::sub-page:vertical, QScrollBar::add-page:vertical {
+    background: none;
+    border: none;
+}
+
+QScrollBar:horizontal {
+    background: #14171b;
+    height: 10px;
+    margin: 0px;
+}
+QScrollBar::handle:horizontal {
+    background: #2a2a30;
+    min-width: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:horizontal:hover {
+    background: #3a3a42;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+    background: none;
+    border: none;
+}
+QScrollBar::sub-page:horizontal, QScrollBar::add-page:horizontal {
+    background: none;
+    border: none;
+}
+/* -- status bar --------------------------------------------------- */
+QStatusBar {
+    background-color: #0e0e12;
+    color: #777777;
+    border-top: 1px solid #2a2a30;
+}
+
+QGraphicsView {
+    background-color: #14171b;
+    color: #d0d0d0;
+    border: 1px solid #14171b;
+    outline: none;
+}
+QTabWidget::pane {
+    border: 1px solid #2a2a30;
+    background-color: #1d1d25;
+}
+QTabBar::tab {
+    background-color: #1a1a20;
+    color: #888888;
+    padding: 8px 16px;
+    border: 1px solid #2a2a30;
+    border-bottom: none;
+}
+QTabBar::tab:selected {
+    background-color: #1d1d25;
+    color: #d0d0d0;
+    border-bottom: 2px solid #517adb;
+}
+QTabBar::tab:hover {
+    background-color: #23232b;
+}
+QTableView {
+    background-color: #0e0e12;
+    color: #d0d0d0;
+    border: 1px solid #2a2a30;
+    gridline-color: #1a1a20;
+    outline: none;
+}
+QTableView::item {
+    padding: 4px;
+}
+QTableView::item:selected {
+    background-color: #23232b;
+    color: white;
+}
+QHeaderView::section {
+    background-color: #1a1a20;
+    color: #888888;
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid #2a2a30;
+    border-right: 1px solid #1a1a20;
+}

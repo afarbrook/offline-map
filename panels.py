@@ -1,30 +1,13 @@
-import sys
-from pathlib import Path
-
-from PySide6.QtCore import QRectF, Qt, Signal, QPointF
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QApplication,
-    QGraphicsScene,
-    QMainWindow,
     QPushButton, 
     QWidget, 
     QVBoxLayout,
-    QDockWidget,
-    QListView,
     QButtonGroup,
     QGridLayout,
     QLabel,
     QTableView
 )
-
-from PySide6.QtGui import QColor
-
-import tile_source
-import mapping_functions
-import flag
-import map_view
-from model import PlacementModel
-from inventory_model import InventoryModel
 import views
 from unit_buttons import UnitPushButton
 

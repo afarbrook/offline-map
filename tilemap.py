@@ -13,18 +13,12 @@ Run:  python tilemap.py
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QRectF, Qt, Signal, QPointF
+from PySide6.QtCore import QRectF, Qt, QPointF
 from PySide6.QtWidgets import (
     QApplication,
     QGraphicsScene,
     QMainWindow,
-    QPushButton, 
-    QWidget, 
-    QVBoxLayout,
     QDockWidget,
-    QListView,
-    QButtonGroup,
-    QGridLayout,
     QLabel,
     QTabWidget
 )
@@ -38,13 +32,16 @@ import map_view
 import time
 from model import PlacementModel
 from inventory_model import InventoryModel
-import views
-from unit_buttons import UnitPushButton
 from panels import PlacementPanel, InventoryPanel
 
-MBTILES_PATH = Path(__file__).parent / "./tiles/tucson.mbtiles"
-STYLE_PATH = Path(__file__).parent / "./style/styleSheet.qss"
-INVENTORY_PATH = Path(__file__).parent / "inventory.csv"
+if getattr(sys, 'frozen', False):
+    BASE_DIR = Path(sys._MEIPASS)
+else:
+    BASE_DIR = Path(__file__).parent
+
+MBTILES_PATH = BASE_DIR / "./tiles/tucson.mbtiles"
+STYLE_PATH = BASE_DIR / "./style/styleSheet.qss"
+INVENTORY_PATH = BASE_DIR / "./data/inventory.csv"
 
 TILE = 256
 ZOOM = 16
@@ -157,6 +154,10 @@ class MainWindow(QMainWindow):
 
     def on_vehicle_selected(self, unit_id):
         self._selected_vehicle_id = unit_id
+        self.panel.unit_group.setExclusive(False)
+        if self.panel.unit_group.checkedButton():
+            self.panel.unit_group.checkedButton().setChecked(False)
+        self.panel.unit_group.setExclusive(True)
 
     def on_map_clicked(self, lat, lon):
         next_unit = None
